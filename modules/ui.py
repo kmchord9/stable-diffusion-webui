@@ -272,12 +272,54 @@ def create_toprow(is_img2img):
             with gr.Row():
                 with gr.Column(scale=80):
                     with gr.Row():
-                        prompt = gr.Textbox(label="Prompt", elem_id=f"{id_part}_prompt", show_label=False, lines=3, placeholder="Prompt (press Ctrl+Enter or Alt+Enter to generate)", elem_classes=["prompt"])
+                        #prompt = gr.Textbox(label="Prompt", elem_id=f"{id_part}_prompt", show_label=False, lines=3, placeholder="Prompt (press Ctrl+Enter or Alt+Enter to generate)", elem_classes=["prompt"])
+                        transDictWho = {
+                            "いぬ": "dog",
+                            "ねこ": "cat",
+                            "とり": "bird",
+                            "うさぎ": "rabbit", 
+                            "パンダ" : "panda",
+                            "ペンギン": "penguin",
+                            "ライオン": "lion",
+                            "コアラ": "koala",
+                        }
+                        transDictWhere = {
+                            "そら": "in sky",
+                            "まち": "in town", 
+                            "もり": "in Forest",
+                            "うみ": "in ocean",
+                            "うちゅう": "in space",
+
+                        }
+                        transDictDo = {
+                            "しゃしん": "real",
+                            "イラスト": "picturebook, illust", 
+                            
+                        }
+
+                        def sentence_builder(who, where, doing):
+                            who = transDictWho[who]
+                            where = transDictWhere[where]
+                            doing = transDictDo[doing]
+                            return f'{who}, {where}, {doing}'
+                        
+                        promptDefVal = sentence_builder(list(transDictWho.keys())[0], list(transDictWhere.keys())[0], list(transDictDo.keys())[0])
+
+                        #prompt = gr.Textbox(label="Prompt", elem_id=f"{id_part}_prompt", show_label=False, lines=3, placeholder="Prompt (press Ctrl+Enter or Alt+Enter to generate)", elem_classes=["prompt"])
+                        prompt = gr.Textbox(value=promptDefVal, interactive=True, visible=False, label="Prompt", elem_id=f"{id_part}_prompt", show_label=False, lines=3, placeholder="Prompt (press Ctrl+Enter or Alt+Enter to generate)")
+                        verb1 = gr.Radio(list(transDictWho.keys()), label="だれ", value=list(transDictWho.keys())[0])
+                        verb2 = gr.Radio(list(transDictWhere.keys()), label="どこ",value=list(transDictWhere.keys())[0])
+                        verb3 = gr.Radio(list(transDictDo.keys()), label="みため",value=list(transDictDo.keys())[0])
+                          
+                        verb1.change(sentence_builder, [verb1,verb2,verb3], prompt)
+                        verb2.change(sentence_builder, [verb1,verb2,verb3], prompt)
+                        verb3.change(sentence_builder, [verb1,verb2,verb3], prompt)
 
             with gr.Row():
                 with gr.Column(scale=80):
                     with gr.Row():
-                        negative_prompt = gr.Textbox(label="Negative prompt", elem_id=f"{id_part}_neg_prompt", show_label=False, lines=3, placeholder="Negative prompt (press Ctrl+Enter or Alt+Enter to generate)", elem_classes=["prompt"])
+                        #negative_prompt = gr.Textbox(label="Negative prompt", elem_id=f"{id_part}_neg_prompt", show_label=False, lines=3, placeholder="Negative prompt (press Ctrl+Enter or Alt+Enter to generate)", elem_classes=["prompt"])
+                        negative_prompt = gr.Textbox(value="default", interactive=True, visible=False, label="Negative prompt", elem_id=f"{id_part}_neg_prompt", show_label=False, lines=2, placeholder="Negative prompt (press Ctrl+Enter or Alt+Enter to generate)")
 
         button_interrogate = None
         button_deepbooru = None
@@ -290,7 +332,7 @@ def create_toprow(is_img2img):
             with gr.Row(elem_id=f"{id_part}_generate_box", elem_classes="generate-box"):
                 interrupt = gr.Button('Interrupt', elem_id=f"{id_part}_interrupt", elem_classes="generate-box-interrupt")
                 skip = gr.Button('Skip', elem_id=f"{id_part}_skip", elem_classes="generate-box-skip")
-                submit = gr.Button('Generate', elem_id=f"{id_part}_generate", variant='primary')
+                submit = gr.Button('がぞうさくせい', elem_id=f"{id_part}_generate", variant='primary')
 
                 skip.click(
                     fn=lambda: shared.state.skip(),
@@ -1652,11 +1694,11 @@ def create_ui():
 
     interfaces = [
         (txt2img_interface, "txt2img", "txt2img"),
-        (img2img_interface, "img2img", "img2img"),
-        (extras_interface, "Extras", "extras"),
-        (pnginfo_interface, "PNG Info", "pnginfo"),
-        (modelmerger_interface, "Checkpoint Merger", "modelmerger"),
-        (train_interface, "Train", "train"),
+        #(img2img_interface, "img2img", "img2img"),
+        #(extras_interface, "Extras", "extras"),
+        #(pnginfo_interface, "PNG Info", "pnginfo"),
+        #(modelmerger_interface, "Checkpoint Merger", "modelmerger"),
+        #(train_interface, "Train", "train"),
     ]
 
     interfaces += script_callbacks.ui_tabs_callback()
