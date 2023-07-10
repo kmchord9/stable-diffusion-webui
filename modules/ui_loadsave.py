@@ -49,6 +49,12 @@ class UiLoadsave:
                 pass
             else:
                 setattr(obj, field, saved_value)
+                if obj.elem_id == 'txt2img_prompt':
+                    print("================txt2img_prompt================")
+                    setattr(obj, field, "dog, in sky, real")
+                if obj.elem_id == 'txt2img_neg_prompt':
+                    print("================txt2img_neg_prompt================")
+                    setattr(obj, field, "defalut_negvalue")
                 if init_field is not None:
                     init_field(saved_value)
 
